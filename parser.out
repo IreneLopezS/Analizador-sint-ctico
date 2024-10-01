@@ -1,0 +1,144 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> programa
+Rule 1     programa -> funcion_main
+Rule 2     funcion_main -> Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura declaraciones Llave_de_cierre
+Rule 3     declaraciones -> declaracion
+Rule 4     declaraciones -> declaraciones declaracion
+Rule 5     declaracion -> Tipo_de_dato Identificador Punto_y_coma
+
+Terminals, with rules where they appear
+
+Identificador        : 5
+Llave_de_apertura    : 2
+Llave_de_cierre      : 2
+Palabra_reservada_main : 2
+Parentesis_de_apertura : 2
+Parentesis_de_cierre : 2
+Punto_y_coma         : 5
+Tipo_de_dato         : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+declaracion          : 3 4
+declaraciones        : 2 4
+funcion_main         : 1
+programa             : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programa
+    (1) programa -> . funcion_main
+    (2) funcion_main -> . Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura declaraciones Llave_de_cierre
+
+    Palabra_reservada_main shift and go to state 3
+
+    programa                       shift and go to state 1
+    funcion_main                   shift and go to state 2
+
+state 1
+
+    (0) S' -> programa .
+
+
+
+state 2
+
+    (1) programa -> funcion_main .
+
+    $end            reduce using rule 1 (programa -> funcion_main .)
+
+
+state 3
+
+    (2) funcion_main -> Palabra_reservada_main . Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura declaraciones Llave_de_cierre
+
+    Parentesis_de_apertura shift and go to state 4
+
+
+state 4
+
+    (2) funcion_main -> Palabra_reservada_main Parentesis_de_apertura . Parentesis_de_cierre Llave_de_apertura declaraciones Llave_de_cierre
+
+    Parentesis_de_cierre shift and go to state 5
+
+
+state 5
+
+    (2) funcion_main -> Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre . Llave_de_apertura declaraciones Llave_de_cierre
+
+    Llave_de_apertura shift and go to state 6
+
+
+state 6
+
+    (2) funcion_main -> Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura . declaraciones Llave_de_cierre
+    (3) declaraciones -> . declaracion
+    (4) declaraciones -> . declaraciones declaracion
+    (5) declaracion -> . Tipo_de_dato Identificador Punto_y_coma
+
+    Tipo_de_dato    shift and go to state 9
+
+    declaraciones                  shift and go to state 7
+    declaracion                    shift and go to state 8
+
+state 7
+
+    (2) funcion_main -> Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura declaraciones . Llave_de_cierre
+    (4) declaraciones -> declaraciones . declaracion
+    (5) declaracion -> . Tipo_de_dato Identificador Punto_y_coma
+
+    Llave_de_cierre shift and go to state 10
+    Tipo_de_dato    shift and go to state 9
+
+    declaracion                    shift and go to state 11
+
+state 8
+
+    (3) declaraciones -> declaracion .
+
+    Llave_de_cierre reduce using rule 3 (declaraciones -> declaracion .)
+    Tipo_de_dato    reduce using rule 3 (declaraciones -> declaracion .)
+
+
+state 9
+
+    (5) declaracion -> Tipo_de_dato . Identificador Punto_y_coma
+
+    Identificador   shift and go to state 12
+
+
+state 10
+
+    (2) funcion_main -> Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura declaraciones Llave_de_cierre .
+
+    $end            reduce using rule 2 (funcion_main -> Palabra_reservada_main Parentesis_de_apertura Parentesis_de_cierre Llave_de_apertura declaraciones Llave_de_cierre .)
+
+
+state 11
+
+    (4) declaraciones -> declaraciones declaracion .
+
+    Llave_de_cierre reduce using rule 4 (declaraciones -> declaraciones declaracion .)
+    Tipo_de_dato    reduce using rule 4 (declaraciones -> declaraciones declaracion .)
+
+
+state 12
+
+    (5) declaracion -> Tipo_de_dato Identificador . Punto_y_coma
+
+    Punto_y_coma    shift and go to state 13
+
+
+state 13
+
+    (5) declaracion -> Tipo_de_dato Identificador Punto_y_coma .
+
+    Llave_de_cierre reduce using rule 5 (declaracion -> Tipo_de_dato Identificador Punto_y_coma .)
+    Tipo_de_dato    reduce using rule 5 (declaracion -> Tipo_de_dato Identificador Punto_y_coma .)
+

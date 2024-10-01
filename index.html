@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador Léxico y Sintáctico</title>
+    <style>
+        body {
+        font-family: time;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-size: cover; 
+        background-repeat: no-repeat;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgb(243, 239, 239);
+            text-align: center;
+        }
+
+        .container h1 {
+            color: rgb(179, 32, 179);
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #c3c8e7;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button, input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #6822b8;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #7d36f0ea;
+        }
+
+        .bottom-section {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .bottom-section table {
+            width: 45%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+            background-color: white; 
+        }
+
+        th {
+            background-color: #e7e7e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analizador Léxico y Sintáctico</h1>
+
+        <form id="lexicalForm">
+            <textarea id="inputText" placeholder="Inserta un texto aquí"></textarea>
+            <button type="button" onclick="analyzeCode()">Analizar</button>
+        </form>
+
+        <div class="bottom-section">
+            <div>
+                <h2>Analizador Léxico</h2>
+                <table id="lexicalTable">
+                    <tr>
+                        <th>Línea</th>
+                        <th>Carácter</th>
+                        <th>Símbolo</th>
+                    </tr>
+                </table>
+            </div>
+
+            <div>
+                <h2>Analizador Sintáctico</h2>
+                <table id="syntacticTable">
+                    <tr>
+                        <th>Línea</th>
+                        <th>Estructura</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeCode() {
+            const inputText = document.getElementById("inputText").value;
+
+            // Limpiar las tablas anteriores
+            document.getElementById("lexicalTable").innerHTML = "<tr><th>Línea</th><th>Carácter</th><th>Símbolo</th></tr>";
+            document.getElementById("syntacticTable").innerHTML = "<tr><th>Línea</th><th>Estructura</th></tr>";
+
+            // Hacer la solicitud al servidor
+            fetch('/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `code=${encodeURIComponent(inputText)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Insertar los resultados léxicos en la tabla
+                data.lexical.forEach(function(result) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>${result.line}</td><td>${result.character}</td><td>${result.symbol}</td>`;
+                    document.getElementById("lexicalTable").appendChild(row);
+                });
+
+                // Insertar los resultados sintácticos en la tabla
+                data.syntactic.forEach(function(result) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>${result.line}</td> <td>${result.structure}</td>`;
+                    document.getElementById("syntacticTable").appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
